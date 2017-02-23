@@ -7,18 +7,20 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.util.SparseArray;
-import android.view.View;
 import android.widget.ImageView;
 
+import com.segment.analytics.Properties;
 import com.squareup.phrase.Phrase;
 
-import io.particle.android.sdk.cloud.SDKGlobals;
 import io.particle.android.sdk.cloud.ParticleCloud;
-import io.particle.android.sdk.devicesetup.ParticleDeviceSetupLibrary;
+import io.particle.android.sdk.cloud.ParticleCloudSDK;
+import io.particle.android.sdk.cloud.SDKGlobals;
+import io.particle.android.sdk.devicesetup.ParticleDeviceSetupLibrary.DeviceSetupCompleteContract;
 import io.particle.android.sdk.devicesetup.R;
-import io.particle.android.sdk.devicesetup.model.DeviceCustomization;
+import io.particle.android.sdk.devicesetup.SetupResult;
 import io.particle.android.sdk.ui.BaseActivity;
 import io.particle.android.sdk.ui.NextActivitySelector;
+import io.particle.android.sdk.utils.SEGAnalytics;
 import io.particle.android.sdk.utils.ui.Ui;
 import io.particle.android.sdk.utils.ui.WebViewActivity;
 
@@ -35,7 +37,6 @@ public class SuccessActivity extends BaseActivity {
     public static final int RESULT_FAILURE_CONFIGURE = 4;
     public static final int RESULT_FAILURE_NO_DISCONNECT = 5;
     public static final int RESULT_FAILURE_LOST_CONNECTION_TO_DEVICE = 6;
-    private DeviceCustomization customization;
 
 
     public static Intent buildIntent(Context ctx, int resultCode) {
@@ -78,58 +79,70 @@ public class SuccessActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_success);
-
-        particleCloud = ParticleCloud.get(this);
+        SEGAnalytics.screen("Device Setup: Setup Result Screen");
+        particleCloud = ParticleCloudSDK.getCloud();
 
         int resultCode = getIntent().getIntExtra(EXTRA_RESULT_CODE, -1);
-        customization = DeviceCustomization.fromIntent(getIntent());
 
         final boolean isSuccess = list(RESULT_SUCCESS, RESULT_SUCCESS_UNKNOWN_OWNERSHIP).contains(resultCode);
         if (!isSuccess) {
             ImageView image = Ui.findView(this, R.id.result_image);
             image.setImageResource(R.drawable.fail);
+            Properties analyticProperties = new Properties();
+
+            switch (resultCode) {
+                case RESULT_FAILURE_CLAIMING:
+                    analyticProperties.putValue("reason", "claiming failed");
+                    break;
+                case RESULT_FAILURE_CONFIGURE:
+                    analyticProperties.putValue("reason", "cannot configure");
+                    break;
+                case RESULT_FAILURE_NO_DISCONNECT:
+                    analyticProperties.putValue("reason", "cannot disconnect");
+                    break;
+                case RESULT_FAILURE_LOST_CONNECTION_TO_DEVICE:
+                    analyticProperties.putValue("reason", "lost connection");
+                    break;
+            }
+            SEGAnalytics.track("Device Setup: Failure", analyticProperties);
+        } else {
+            SEGAnalytics.track("Device Setup: Success", RESULT_SUCCESS_UNKNOWN_OWNERSHIP == resultCode ?
+                            new Properties().putValue("reason", "not claimed") : null);
         }
 
         Pair<? extends CharSequence, CharSequence> resultStrings = buildUiStringPair(resultCode);
         Ui.setText(this, R.id.result_summary, resultStrings.first);
         Ui.setText(this, R.id.result_details, resultStrings.second);
 
-        Ui.findView(this, R.id.action_done).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = NextActivitySelector.getNextActivityIntent(
-                        v.getContext(),
-                        particleCloud,
-                        SDKGlobals.getSensitiveDataStorage());
+        Ui.findView(this, R.id.action_done).setOnClickListener(v -> {
+            Intent intent = NextActivitySelector.getNextActivityIntent(
+                    v.getContext(),
+                    particleCloud,
+                    SDKGlobals.getSensitiveDataStorage(),
+                    new SetupResult(isSuccess, isSuccess ? DeviceSetupState.deviceToBeSetUpId : null));
 
-                // FIXME: we shouldn't do this in the lib.  looks like another argument for Fragments.
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+            // FIXME: we shouldn't do this in the lib.  looks like another argument for Fragments.
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
-                Intent result;
-                result = new Intent(ParticleDeviceSetupLibrary.DeviceSetupCompleteContract.ACTION_DEVICE_SETUP_COMPLETE)
-                        .putExtra(ParticleDeviceSetupLibrary.DeviceSetupCompleteContract.EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL, isSuccess);
-                if (isSuccess) {
-                    result.putExtra(ParticleDeviceSetupLibrary.DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID,
-                            DeviceSetupState.deviceToBeSetUpId);
-                }
-                LocalBroadcastManager.getInstance(v.getContext()).sendBroadcast(result);
-
-                finish();
+            Intent result = new Intent(DeviceSetupCompleteContract.ACTION_DEVICE_SETUP_COMPLETE)
+                    .putExtra(DeviceSetupCompleteContract.EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL, isSuccess);
+            if (isSuccess) {
+                result.putExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID,
+                        DeviceSetupState.deviceToBeSetUpId);
             }
+            LocalBroadcastManager.getInstance(v.getContext()).sendBroadcast(result);
+
+            finish();
         });
 
         Ui.setTextFromHtml(this, R.id.action_troubleshooting, R.string.troubleshooting)
-                .setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        Uri uri = Uri.parse(v.getContext().getString(R.string.troubleshooting_uri));
-                        startActivity(WebViewActivity.buildIntent(v.getContext(), uri));
-                    }
+                .setOnClickListener(v -> {
+                    Uri uri = Uri.parse(v.getContext().getString(R.string.troubleshooting_uri));
+                    startActivity(WebViewActivity.buildIntent(v.getContext(), uri));
                 });
 
     }
@@ -138,7 +151,7 @@ public class SuccessActivity extends BaseActivity {
         Pair<Integer, Integer> stringIds = resultCodesToStringIds.get(resultCode);
         return Pair.create(getString(stringIds.first),
                 Phrase.from(this, stringIds.second)
-                        .put("device_name", getString(customization.getDeviceName()))
+                        .put("device_name", getString(R.string.device_name))
                         .format());
     }
 

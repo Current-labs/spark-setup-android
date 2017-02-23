@@ -8,12 +8,9 @@ import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.common.base.Preconditions;
-
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
-import io.particle.android.sdk.devicesetup.model.DeviceCustomization;
 import io.particle.android.sdk.devicesetup.ui.GetReadyActivity;
-import io.particle.android.sdk.utils.ParticleSetupConstants;
+import io.particle.android.sdk.utils.Preconditions;
 
 
 public class ParticleDeviceSetupLibrary {
@@ -45,7 +42,7 @@ public class ParticleDeviceSetupLibrary {
 
     /**
      * A convenience class which wraps DeviceSetupCompleteContract.
-     *
+     * <p/>
      * Just extend this and override onSetupSuccess() and onSetupFailure() to receive
      * the success/failure status.
      */
@@ -87,24 +84,36 @@ public class ParticleDeviceSetupLibrary {
 
     /**
      * Start the device setup process.
+     *
+     * @deprecated Use {@link ParticleDeviceSetupLibrary#startDeviceSetup(Context, Class)}
+     *             or {@link ParticleDeviceSetupLibrary#startDeviceSetup(Context, SetupCompleteIntentBuilder)} instead.
      */
+    @Deprecated
     public static void startDeviceSetup(Context ctx) {
+        Preconditions.checkNotNull(instance.setupCompleteIntentBuilder,
+                "SetupCompleteIntentBuilder instance is null");
+
         ctx.startActivity(new Intent(ctx, GetReadyActivity.class));
     }
 
-    /**
-     * Start the device setup process passing a device customization object
-     */
-    public static void startDeviceSetup(Context ctx, DeviceCustomization customization) {
-        Intent intent = new Intent(ctx, GetReadyActivity.class);
-        intent.putExtra(ParticleSetupConstants.CUSTOMIZATION_TAG, customization);
-        ctx.startActivity(intent);
+    public static void startDeviceSetup(Context ctx, SetupCompleteIntentBuilder setupCompleteIntentBuilder) {
+        instance.setupCompleteIntentBuilder = setupCompleteIntentBuilder;
+
+        startDeviceSetup(ctx);
     }
+
+    public static void startDeviceSetup(Context ctx, final Class<? extends Activity> mainActivity) {
+        startDeviceSetup(ctx, (ctx1, result) -> {
+            return new Intent(ctx1, mainActivity);
+        });
+    }
+
 
     // FIXME: allow the SDK consumer to optionally pass in some kind of dynamic intent builder here
     // instead of a static class
     // FIXME: or, stop requiring an activity at all and just use a single activity for setup which
     // uses Fragments internally...
+
     /**
      * Initialize the device setup SDK
      *
@@ -113,12 +122,29 @@ public class ParticleDeviceSetupLibrary {
      *                     Activity here)
      * @param mainActivity the class for your 'main" activity, i.e.: the class you want to
      *                     return to when the setup process is complete.
+     * @deprecated         Use {@link ParticleDeviceSetupLibrary#init(Context)} with
+     *                     {@link ParticleDeviceSetupLibrary#startDeviceSetup(Context, Class)}
+     *                     or {@link ParticleDeviceSetupLibrary#startDeviceSetup(Context, SetupCompleteIntentBuilder)} instead.
      */
-    public static void init(Context ctx, Class<? extends Activity> mainActivity) {
+    @Deprecated
+    public static void init(Context ctx, final Class<? extends Activity> mainActivity) {
+        init(ctx);
+
+        instance.setupCompleteIntentBuilder = (ctx1, result) -> new Intent(ctx1, mainActivity);
+    }
+
+    /**
+     * Initialize the device setup SDK
+     *
+     * @param ctx          any Context (the application context will be accessed from whatever is
+     *                     passed in here, so leaks are not a concern even if you pass in an
+     *                     Activity here)
+     */
+    public static void init(Context ctx) {
         if (instance == null) {
             // ensure the cloud SDK is initialized
             ParticleCloudSDK.init(ctx);
-            instance = new ParticleDeviceSetupLibrary(mainActivity);
+            instance = new ParticleDeviceSetupLibrary();
         }
     }
 
@@ -130,15 +156,18 @@ public class ParticleDeviceSetupLibrary {
 
     private static ParticleDeviceSetupLibrary instance;
 
+    private SetupCompleteIntentBuilder setupCompleteIntentBuilder;
 
-    public Class<? extends Activity> getMainActivityClass() {
-        return mainActivity;
+    /**
+     * @deprecated This exists only because {@link io.particle.android.sdk.ui.NextActivitySelector}
+     * is in a different package, and the plan is to remove that class soon.
+     * As soon as {@link io.particle.android.sdk.ui.NextActivitySelector} is removed, this will be removed.
+     */
+    @Deprecated
+    public SetupCompleteIntentBuilder getSetupCompleteIntentBuilder() {
+        return setupCompleteIntentBuilder;
     }
 
-    private final Class<? extends Activity> mainActivity;
-
-    private ParticleDeviceSetupLibrary(Class<? extends Activity> mainActivity) {
-        this.mainActivity = mainActivity;
+    private ParticleDeviceSetupLibrary() {
     }
-
 }
