@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
+import io.particle.android.sdk.devicesetup.model.DeviceCustomization;
+import io.particle.android.sdk.devicesetup.ui.DeviceSetupState;
 import io.particle.android.sdk.devicesetup.ui.GetReadyActivity;
 import io.particle.android.sdk.utils.Preconditions;
 
@@ -103,6 +105,16 @@ public class ParticleDeviceSetupLibrary {
     }
 
     public static void startDeviceSetup(Context ctx, final Class<? extends Activity> mainActivity) {
+        startDeviceSetup(ctx, (ctx1, result) -> {
+            return new Intent(ctx1, mainActivity);
+        });
+    }
+
+    /**
+     * Start the device setup process passing a device customization object
+     */
+    public static void startDeviceSetup(Context ctx, final Class<? extends Activity> mainActivity, DeviceCustomization customization) {
+        DeviceSetupState.productInfo = customization;
         startDeviceSetup(ctx, (ctx1, result) -> {
             return new Intent(ctx1, mainActivity);
         });

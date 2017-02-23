@@ -151,7 +151,7 @@ public class SuccessActivity extends BaseActivity {
         Pair<Integer, Integer> stringIds = resultCodesToStringIds.get(resultCode);
         return Pair.create(getString(stringIds.first),
                 Phrase.from(this, stringIds.second)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .format());
     }
 

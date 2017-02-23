@@ -5,6 +5,7 @@ import java.security.PublicKey;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import io.particle.android.sdk.devicesetup.model.DeviceCustomization;
 import io.particle.android.sdk.utils.SSID;
 
 // FIXME: Statically defined, global, mutable state...  refactor this thing into oblivion soon.
@@ -16,6 +17,7 @@ public class DeviceSetupState {
     static volatile PublicKey publicKey;
     static volatile String deviceToBeSetUpId;
     static volatile boolean deviceNeedsToBeClaimed = true;
+    static volatile DeviceCustomization productInfo = new DeviceCustomization();
 
     static void reset() {
         claimCode = null;

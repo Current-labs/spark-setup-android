@@ -10,14 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import com.google.gson.Gson;
 import com.squareup.phrase.Phrase;
-
-import java.security.PublicKey;
-import java.util.List;
-import java.util.Set;
-
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
 import io.particle.android.sdk.cloud.ParticleDevice;
@@ -26,31 +20,15 @@ import io.particle.android.sdk.devicesetup.R;
 import io.particle.android.sdk.devicesetup.SetupProcessException;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
-import io.particle.android.sdk.devicesetup.setupsteps.CheckIfDeviceClaimedStep;
-import io.particle.android.sdk.devicesetup.setupsteps.ConfigureAPStep;
-import io.particle.android.sdk.devicesetup.setupsteps.ConnectDeviceToNetworkStep;
-import io.particle.android.sdk.devicesetup.setupsteps.EnsureSoftApNotVisible;
-import io.particle.android.sdk.devicesetup.setupsteps.SetupStep;
-import io.particle.android.sdk.devicesetup.setupsteps.SetupStepApReconnector;
-import io.particle.android.sdk.devicesetup.setupsteps.SetupStepsRunnerTask;
-import io.particle.android.sdk.devicesetup.setupsteps.StepConfig;
-import io.particle.android.sdk.devicesetup.setupsteps.StepProgress;
-import io.particle.android.sdk.devicesetup.setupsteps.WaitForCloudConnectivityStep;
-import io.particle.android.sdk.devicesetup.setupsteps.WaitForDisconnectionFromDeviceStep;
-import io.particle.android.sdk.utils.CoreNameGenerator;
-import io.particle.android.sdk.utils.EZ;
-import io.particle.android.sdk.utils.Funcy;
-import io.particle.android.sdk.utils.Py;
-import io.particle.android.sdk.utils.SEGAnalytics;
-import io.particle.android.sdk.utils.SSID;
-import io.particle.android.sdk.utils.SoftAPConfigRemover;
-import io.particle.android.sdk.utils.TLog;
-import io.particle.android.sdk.utils.WifiFacade;
+import io.particle.android.sdk.devicesetup.setupsteps.*;
+import io.particle.android.sdk.utils.*;
 import io.particle.android.sdk.utils.ui.Ui;
 
-import static io.particle.android.sdk.utils.Py.list;
-import static io.particle.android.sdk.utils.Py.set;
-import static io.particle.android.sdk.utils.Py.truthy;
+import java.security.PublicKey;
+import java.util.List;
+import java.util.Set;
+
+import static io.particle.android.sdk.utils.Py.*;
 
 
 public class ConnectingActivity extends RequiresWifiScansActivity {
@@ -132,7 +110,7 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
 
         Ui.setText(this, R.id.connecting_text,
                 Phrase.from(this, R.string.connecting_text)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .format()
         );
         Ui.setText(this, R.id.network_name, networkToConnectTo.ssid);

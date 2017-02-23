@@ -90,15 +90,17 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
 
         resetWorker();
 
+        Ui.setDrawable(this, R.id.imageView, DeviceSetupState.productInfo.getDeviceImageSmall());
+
         Ui.setText(this, R.id.wifi_list_header,
                 Phrase.from(this, R.string.wifi_list_header_text)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .format()
         );
 
         Ui.setText(this, R.id.msg_device_not_listed,
                 Phrase.from(this, R.string.msg_device_not_listed)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .put("setup_button_identifier", getString(R.string.mode_button_name))
                         .put("indicator_light", getString(R.string.indicator_light))
                         .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
@@ -197,7 +199,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     @Override
     public String getListEmptyText() {
         return Phrase.from(this, R.string.empty_soft_ap_list_text)
-                .put("device_name", getString(R.string.device_name))
+                .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                 .format().toString();
     }
 
@@ -226,7 +228,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         wifiListFragment.stopAggroLoading();
 
         String msg = Phrase.from(this, R.string.connecting_to_soft_ap)
-                .put("device_name", getString(R.string.device_name))
+                .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                 .format().toString();
 
         connectToApSpinnerDialog = new ProgressDialog(this);
@@ -319,7 +321,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         }
 
         String errorMsg = Phrase.from(this, R.string.unable_to_connect_to_soft_ap)
-                .put("device_name", getString(R.string.device_name))
+                .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                 .format().toString();
 
         new AlertDialog.Builder(this)
@@ -335,7 +337,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
 
     private void onDeviceClaimedByOtherUser() {
         String dialogMsg = getString(R.string.dialog_title_owned_by_another_user,
-                getString(R.string.device_name), sparkCloud.getLoggedInUsername());
+                getString(DeviceSetupState.productInfo.getDeviceName()), sparkCloud.getLoggedInUsername());
 
         new Builder(this)
                 .setTitle(getString(R.string.change_owner_question))

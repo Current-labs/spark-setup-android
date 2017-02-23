@@ -9,11 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-
 import com.squareup.phrase.Phrase;
-
-import java.util.Arrays;
-
 import io.particle.android.sdk.accountsetup.LoginActivity;
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudException;
@@ -30,6 +26,8 @@ import io.particle.android.sdk.utils.ui.ParticleUi;
 import io.particle.android.sdk.utils.ui.Toaster;
 import io.particle.android.sdk.utils.ui.Ui;
 import io.particle.android.sdk.utils.ui.WebViewActivity;
+
+import java.util.Arrays;
 
 import static io.particle.android.sdk.utils.Py.truthy;
 
@@ -65,14 +63,14 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
 
         Ui.setText(this, R.id.get_ready_text,
                 Phrase.from(this, R.string.get_ready_text)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
                         .put("setup_button_identifier", getString(R.string.mode_button_name))
                         .format());
 
         Ui.setText(this, R.id.get_ready_text_title,
                 Phrase.from(this, R.string.get_ready_title_text)
-                        .put("device_name", getString(R.string.device_name))
+                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .format());
     }
 
