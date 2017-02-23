@@ -159,7 +159,7 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
                     }
 
                     // FIXME: we could just check the internet connection here ourselves...
-                    String errorMsg = getString(R.string.get_ready_could_not_connect_to_cloud);
+                    String errorMsg = getString(R.string.get_ready_could_not_connect_to_cloud, getString(R.string.brand_name));
                     if (error.getMessage() != null) {
                         errorMsg = errorMsg + "\n\n" + error.getMessage();
                     }

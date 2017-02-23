@@ -72,7 +72,7 @@
     <string name="show_password">Show password</string>
     <string name="change_network">Change network</string>
     <string name="done">Done!</string>
-    <string name="get_ready_could_not_connect_to_cloud">Could not communicate with Photon cloud.  Make sure your Android device is connected to the internet and retry.</string>
+    <string name="get_ready_could_not_connect_to_cloud">Could not communicate with %s cloud.  Make sure your Android device is connected to the internet and retry.</string>
     <string name="error">Error</string>
     <string name="ok">OK</string>
     <string name="access_denied">Access denied</string>
