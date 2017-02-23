@@ -12,6 +12,7 @@ import java.util.Set;
 import io.particle.android.sdk.devicesetup.R;
 import io.particle.android.sdk.devicesetup.SimpleReceiver;
 import io.particle.android.sdk.devicesetup.model.ScanResultNetwork;
+import io.particle.android.sdk.devicesetup.ui.DeviceSetupState;
 import io.particle.android.sdk.utils.BetterAsyncTaskLoader;
 import io.particle.android.sdk.utils.Funcy;
 import io.particle.android.sdk.utils.Funcy.Predicate;
@@ -94,7 +95,7 @@ public class WifiScanResultLoader extends BetterAsyncTaskLoader<Set<ScanResultNe
         if (input == null || !truthy(input.SSID)) {
             return false;
         }
-        String softApPrefix = (getContext().getString(R.string.network_name_prefix) + "-").toLowerCase(Locale.ROOT);
+        String softApPrefix = (getContext().getString(DeviceSetupState.productInfo.getNetworkNamePrefix()) + "-").toLowerCase(Locale.ROOT);
         return input.SSID.toLowerCase(Locale.ROOT).startsWith(softApPrefix);
     };
 
