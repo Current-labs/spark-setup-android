@@ -122,13 +122,6 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
             );
         }
 
-        Ui.findView(this, R.id.action_log_out).setOnClickListener(view -> {
-            sparkCloud.logOut();
-            log.i("logged out, username is: " + sparkCloud.getLoggedInUsername());
-            startActivity(new Intent(DiscoverDeviceActivity.this, LoginActivity.class));
-            finish();
-        });
-
         Ui.findView(this, R.id.action_cancel).setOnClickListener(view -> finish());
     }
 
