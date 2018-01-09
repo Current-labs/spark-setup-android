@@ -10,8 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
 import com.google.gson.Gson;
 import com.squareup.phrase.Phrase;
+
+import java.security.PublicKey;
+import java.util.List;
+import java.util.Set;
+
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
 import io.particle.android.sdk.cloud.ParticleDevice;
@@ -20,15 +26,32 @@ import io.particle.android.sdk.devicesetup.R;
 import io.particle.android.sdk.devicesetup.SetupProcessException;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
-import io.particle.android.sdk.devicesetup.setupsteps.*;
-import io.particle.android.sdk.utils.*;
+import io.particle.android.sdk.devicesetup.setupsteps.CheckIfDeviceClaimedStep;
+import io.particle.android.sdk.devicesetup.setupsteps.ConfigureAPStep;
+import io.particle.android.sdk.devicesetup.setupsteps.ConnectDeviceToNetworkStep;
+import io.particle.android.sdk.devicesetup.setupsteps.EnsureSoftApNotVisible;
+import io.particle.android.sdk.devicesetup.setupsteps.SetupStep;
+import io.particle.android.sdk.devicesetup.setupsteps.SetupStepApReconnector;
+import io.particle.android.sdk.devicesetup.setupsteps.SetupStepsRunnerTask;
+import io.particle.android.sdk.devicesetup.setupsteps.StepConfig;
+import io.particle.android.sdk.devicesetup.setupsteps.StepProgress;
+import io.particle.android.sdk.devicesetup.setupsteps.WaitForCloudConnectivityStep;
+import io.particle.android.sdk.devicesetup.setupsteps.WaitForDisconnectionFromDeviceStep;
+import io.particle.android.sdk.ui.BaseActivity;
+import io.particle.android.sdk.utils.CoreNameGenerator;
+import io.particle.android.sdk.utils.EZ;
+import io.particle.android.sdk.utils.Funcy;
+import io.particle.android.sdk.utils.Py;
+import io.particle.android.sdk.utils.SEGAnalytics;
+import io.particle.android.sdk.utils.SSID;
+import io.particle.android.sdk.utils.SoftAPConfigRemover;
+import io.particle.android.sdk.utils.TLog;
+import io.particle.android.sdk.utils.WifiFacade;
 import io.particle.android.sdk.utils.ui.Ui;
 
-import java.security.PublicKey;
-import java.util.List;
-import java.util.Set;
-
-import static io.particle.android.sdk.utils.Py.*;
+import static io.particle.android.sdk.utils.Py.list;
+import static io.particle.android.sdk.utils.Py.set;
+import static io.particle.android.sdk.utils.Py.truthy;
 
 
 public class ConnectingActivity extends RequiresWifiScansActivity {
@@ -104,7 +127,9 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         Ui.setText(this, R.id.network_name, networkToConnectTo.ssid);
         Button cancelButton = Ui.findView(this, R.id.action_cancel);
         cancelButton.setOnClickListener(v -> {
-            connectingProcessWorkerTask.cancel(false);
+            if (connectingProcessWorkerTask != null) {
+                connectingProcessWorkerTask.cancel(false);
+            }
             finish();
         });
 
@@ -172,7 +197,7 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                 StepConfig.newBuilder()
                         .setMaxAttempts(MAX_RETRIES_DISCONNECT_FROM_DEVICE)
                         .setResultCode(SuccessActivity.RESULT_FAILURE_NO_DISCONNECT)
-                        .setStepId(R.id.connect_to_wifi_network)
+                        .setStepId(R.id.reconnect_to_wifi_network)
                         .build(),
                 deviceSoftApSsid, this);
 
@@ -200,16 +225,17 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                         .build(),
                 sparkCloud, deviceId, needToClaimDevice);
 
-        return list(
+        List<SetupStep> steps = list(
                 configureAPStep,
                 connectDeviceToNetworkStep,
                 waitForDisconnectionFromDeviceStep,
                 ensureSoftApNotVisible,
-                waitForLocalCloudConnectivityStep,
-                checkIfDeviceClaimedStep
-        );
+                waitForLocalCloudConnectivityStep);
+        if (!BaseActivity.setupOnly) {
+            steps.add(checkIfDeviceClaimedStep);
+        }
+        return steps;
     }
-
 
 
     private class ConnectingProcessWorkerTask extends SetupStepsRunnerTask {
@@ -261,7 +287,7 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                 });
             }
 
-            startActivity(SuccessActivity.buildIntent(ConnectingActivity.this, resultCode));
+            startActivity(SuccessActivity.buildIntent(ConnectingActivity.this, resultCode, deviceId));
             finish();
         }
 

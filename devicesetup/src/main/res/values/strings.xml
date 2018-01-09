@@ -55,6 +55,7 @@
     <string name="no_wifi_networks_found">(No Wi-Fi networks found)</string>
     <string name="check_for_internet_connectivity">Checking for internet connectivity</string>
     <string name="connect_to_wifi_network">Connecting to Wi-Fi network</string>
+    <string name="reconnect_to_wifi_network">Disconnecting from softAP</string>
     <string name="configure_device_wifi_credentials">Configuring device Wi-Fi credentials</string>
     <string name="wait_for_device_cloud_connection">Waiting for device cloud connection</string>
     <string name="verify_product_ownership">Verifying product ownership</string>
@@ -77,8 +78,10 @@
     <string name="ok">OK</string>
     <string name="access_denied">Access denied</string>
     <string name="wifi_required">Wi-Fi Required</string>
+    <string name="location_required">Location Required</string>
     <string name="setup_requires_wifi">Setting up devices requires Wi-Fi.  Enable it now?</string>
     <string name="enable_wifi">Enable Wi-Fi</string>
+    <string name="enable_location">Enable Location</string>
     <string name="exit_setup">Exit setup</string>
     <string name="location_permission_dialog_text">Setup needs to scan Wi-Fi to find your new device.\n\nBecause these scans could also reveal your location, setup requires the Location permission.\n\nSetup will continue after you press ALLOW on the next screen.</string>
     <string name="location_permission_dialog_title">Permission needed</string>
@@ -101,5 +104,12 @@
     <string name="dialog_title_owned_by_another_user">This %1$s is owned by another user.  Change owner to %2$s?</string>
     <string name="change_owner_question">Change owner?</string>
     <string name="change_owner">Change owner</string>
+    <string name="device_naming_hint">none</string>
+    <string name="device_naming_label">Name your new device:</string>
+    <string name="device_naming_failure">Failed to change device name</string>
+    <string name="location_required_message">This access allows you to pair your Android device with
+        your Photon to complete the setup process. Particle will not use location data for any other
+        purposes.
+    </string>
 
 </resources>

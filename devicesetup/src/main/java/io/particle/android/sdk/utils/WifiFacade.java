@@ -115,10 +115,7 @@ public class WifiFacade {
                 Arrays.asList(connectivityManager.getAllNetworks()),
                 network -> {
                     NetworkInfo networkInfo = connectivityManager.getNetworkInfo(network);
-                    if (!Py.truthy(networkInfo.getExtraInfo())) {
-                        return false;
-                    }
-                    return SSID.from(networkInfo.getExtraInfo()).equals(ssid);
+                    return Py.truthy(networkInfo.getExtraInfo()) && SSID.from(networkInfo.getExtraInfo()).equals(ssid);
                 }
         );
     }
@@ -136,6 +133,17 @@ public class WifiFacade {
     public boolean enableNetwork(int networkId, boolean disableOthers) {
         log.d("enableNetwork for networkID " + networkId);
         return wifiManager.enableNetwork(networkId, disableOthers);
+    }
+
+    public WifiConfiguration getWifiConfiguration(SSID ssid) {
+        List<WifiConfiguration> wifiConfigurations = getConfiguredNetworks();
+        for (WifiConfiguration configuration : wifiConfigurations) {
+            log.d("Found configured wifi: " + configuration.SSID);
+            if (configuration.SSID.equals(ssid.inQuotes())) {
+                return configuration;
+            }
+        }
+        return null;
     }
 
     @Nullable

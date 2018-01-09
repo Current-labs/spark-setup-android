@@ -24,7 +24,8 @@
             style="@style/SectionHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/connecting"/>
+            android:text="@string/connecting"
+            android:textSize="35sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/connecting_text"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="29sp"/>
 
                 <TextView
                     android:id="@+id/network_name"
@@ -57,7 +58,7 @@
                     android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:text="[network name]"
-                    android:textSize="@dimen/text_size_medium"
+                    android:textSize="27sp"
                     android:textStyle="bold"
                     tools:ignore="MissingPrefix,HardcodedText"/>
 
@@ -67,7 +68,7 @@
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:text="@string/connecting_text_2"
-                    android:textSize="@dimen/text_size_medium"/>
+                    android:textSize="29sp"/>
 
             </LinearLayout>
 
@@ -109,7 +110,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/configure_device_wifi_credentials"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -148,7 +149,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/connect_to_wifi_network"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -186,7 +187,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/reconnect_to_wifi_network"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -224,7 +225,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/wait_for_device_cloud_connection"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -263,7 +264,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/check_for_internet_connectivity"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 
@@ -302,7 +303,7 @@
                         android:layout_gravity="left|center_vertical"
                         android:layout_marginLeft="8dp"
                         android:text="@string/verify_product_ownership"
-                        android:textSize="@dimen/text_size_small"/>
+                        android:textSize="25sp"/>
 
                 </LinearLayout>
 

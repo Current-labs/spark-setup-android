@@ -1,3 +1,50 @@
+0.4.9
+=====
+* Android library update, ConnectingActivity null exception fix.
+
+0.4.8
+=====
+* Permission and location service request messages.
+
+0.4.7
+=====
+* Adding 'initWithSetupOnly', allows customer to setup WiFi without claiming device.
+* Updating Android & Cloudsdk libraries
+* Workaround for bug where WiFi scanning requires enabled Location services, user will be alerted to enable location services on Android M and later versions.
+
+0.4.6
+=====
+* Adding organization customization options as deprecated, trying to use deprecated organization option will result in exception.
+
+0.4.5
+=====
+* Adding back email field for organization sign up.
+
+0.4.4
+=====
+* Resetting password should be done through native screen.
+* Updating Android & Cloudsdk libraries
+* Replacing org & product slug with productId
+* Temporary fix for sign up "Invalid credentials" bug (sing up returning 200 response code bug)
+
+0.4.3
+=====
+* Popup text color changed to white
+* Password length check (must be at least 8 characters)
+* Font sizes for tablet devices
+
+0.4.2
+=====
+* UI for step disconnecting from softAP
+
+0.4.1
+=====
+* Device naming at the end of setup
+* Fix for setup wifi connection issues on Nougat
+* Cloudsdk version upgrade
+* Analytics
+* Added account info fields on signup
+
 0.4.0
 =====
 * Lambdas, android version upgrade, gradle upgrade to beta3, Refactoring
