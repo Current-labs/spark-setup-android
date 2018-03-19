@@ -186,6 +186,14 @@ public class SuccessActivity extends BaseActivity {
     }
 
     private void leaveActivity(Context context, boolean isSuccess) {
+        Intent result = new Intent(DeviceSetupCompleteContract.ACTION_DEVICE_SETUP_COMPLETE)
+                .putExtra(DeviceSetupCompleteContract.EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL, isSuccess);
+        if (isSuccess) {
+            result.putExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID,
+                    DeviceSetupState.deviceToBeSetUpId);
+        }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(result);
+
         Intent intent = NextActivitySelector.getNextActivityIntent(
                 context,
                 particleCloud,
@@ -198,14 +206,6 @@ public class SuccessActivity extends BaseActivity {
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
-        Intent result = new Intent(DeviceSetupCompleteContract.ACTION_DEVICE_SETUP_COMPLETE)
-                .putExtra(DeviceSetupCompleteContract.EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL, isSuccess);
-        if (isSuccess) {
-            result.putExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID,
-                    DeviceSetupState.deviceToBeSetUpId);
-        }
-        LocalBroadcastManager.getInstance(context).sendBroadcast(result);
 
         finish();
     }
