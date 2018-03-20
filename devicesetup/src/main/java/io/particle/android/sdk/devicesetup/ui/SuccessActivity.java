@@ -151,9 +151,14 @@ public class SuccessActivity extends BaseActivity {
             }
             SEGAnalytics.track("Device Setup: Failure", analyticProperties);
         } else {
-            showDeviceName(particleCloud);
             SEGAnalytics.track("Device Setup: Success", RESULT_SUCCESS_UNKNOWN_OWNERSHIP == resultCode ?
                     new Properties().putValue("reason", "not claimed") : null);
+            if (DeviceSetupState.productInfo.isSkippingNaming()) {
+                leaveActivity(getApplicationContext(), isSuccess);
+                return;
+            } else {
+                showDeviceName(particleCloud);
+            }
         }
 
         Pair<? extends CharSequence, CharSequence> resultStrings = buildUiStringPair(resultCode);

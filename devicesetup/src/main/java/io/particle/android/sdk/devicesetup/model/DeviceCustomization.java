@@ -21,6 +21,9 @@ import io.particle.android.sdk.utils.ParticleSetupConstants;
 
 public class DeviceCustomization implements Parcelable {
 
+    // Skip the Name Your Device step
+    private boolean skipNaming = false;
+
     private int brandName = R.string.brand_name;
     private int appName = R.string.app_name;
     private int deviceName = R.string.device_name;
@@ -95,6 +98,14 @@ public class DeviceCustomization implements Parcelable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //Getters and Setters:
+
+    public boolean isSkippingNaming() {
+        return skipNaming;
+    }
+
+    public void setSkipNaming(boolean skipNaming) {
+        this.skipNaming = skipNaming;
+    }
 
     public int getBrandName() {
         return brandName;
@@ -466,6 +477,7 @@ public class DeviceCustomization implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.skipNaming ? 1 : 0);
         dest.writeInt(this.brandName);
         dest.writeInt(this.appName);
         dest.writeInt(this.deviceName);
@@ -517,6 +529,7 @@ public class DeviceCustomization implements Parcelable {
     }
 
     protected DeviceCustomization(Parcel in) {
+        this.skipNaming = in.readInt() == 1;
         this.brandName = in.readInt();
         this.appName = in.readInt();
         this.deviceName = in.readInt();
