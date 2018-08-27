@@ -371,33 +371,14 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     }
 
     private void onDeviceClaimedByOtherUser() {
-        String dialogMsg = getString(R.string.dialog_title_owned_by_another_user,
-                getString(DeviceSetupState.productInfo.getDeviceName()), sparkCloud.getLoggedInUsername());
+        // Force device claim
+        resetWorker();
+        discoverProcessWorker.needToClaimDevice = true;
+        discoverProcessWorker.gotOwnershipInfo = true;
+        discoverProcessWorker.isDetectedDeviceClaimed = false;
 
-        new Builder(this)
-                .setTitle(getString(R.string.change_owner_question))
-                .setMessage(dialogMsg)
-                .setPositiveButton(getString(R.string.change_owner),
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                            log.i("Changing owner to " + sparkCloud.getLoggedInUsername());
-                            // FIXME: state mutation from another class.  Not pretty.
-                            // Fix this by breaking DiscoverProcessWorker down into Steps
-                            resetWorker();
-                            discoverProcessWorker.needToClaimDevice = true;
-                            discoverProcessWorker.gotOwnershipInfo = true;
-                            discoverProcessWorker.isDetectedDeviceClaimed = false;
-
-                            showProgressDialog();
-                            startConnectWorker();
-                        })
-                .setNegativeButton(R.string.cancel,
-                        (dialog, which) -> {
-                            dialog.dismiss();
-                            startActivity(new Intent(DiscoverDeviceActivity.this, GetReadyActivity.class));
-                            finish();
-                        })
-                .show();
+        showProgressDialog();
+        startConnectWorker();
     }
 
     // FIXME: remove this if we break down discover process worker into Steps
