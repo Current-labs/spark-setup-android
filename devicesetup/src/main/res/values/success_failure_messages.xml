@@ -11,7 +11,7 @@
     <string name="setup_failure_claiming_details">Setup process couldn\'t claim your {device_name}! If the {device_name} LED is blinking blue or green then you may have mistyped the Wi-Fi credentials and you should try setup again. If the LED is breathing cyan a server issue may have occurred - please contact support.</string>
 
     <string name="setup_failure_no_disconnect_from_device_summary">Uh oh!</string>
-    <string name="setup_failure_no_disconnect_from_device_details">Setup process couldn\'t disconnect from the {device_name} Wi-Fi network. This is an internal problem with the device, so please try running setup again after resetting your {device_name} and putting it back in blinking blue listen mode if needed.</string>
+    <string name="setup_failure_no_disconnect_from_device_details">Setup process couldn\'t disconnect from the {device_name} Wi-Fi network. If the {device_name} LED is blinking blue or green then you may have mistyped the Wi-Fi credentials and you should try setup again. If the LED is blinking cyan (sky blue) a network issue may have occurred - please contact support.</string>
 
     <string name="setup_failure_configure_summary">Error!</string>
     <string name="setup_failure_configure_details">Setup process couldn\'t configure the Wi-Fi credentials for your {device_name}, please try running setup again after resetting your {device_name} and putting it back in blinking blue listen mode if needed.</string>
