@@ -3,6 +3,9 @@ package io.particle.android.sdk.devicesetup.loaders;
 import android.content.Context;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -65,10 +68,10 @@ public class ScanApCommandLoader extends BetterAsyncTaskLoader<Set<ScanAPCommand
         try {
             // Do a different thing for ESP32 devices
             if (!DeviceSetupState.productInfo.isParticleDevice()) {
-                AWSScanApCommand.Response response = commandClient.sendCommand(
-                        new AWSScanApCommand(), AWSScanApCommand.Response.class);
+                AWSScanApCommand.Scan[] response = commandClient.sendCommand(
+                        new AWSScanApCommand(), AWSScanApCommand.Scan[].class);
                 // TODO: not sure if necessary to duplicate or just reuse
-                accumulatedResults.addAll(Funcy.transformList(response.getScans(), AWSScanAPCommandResult::new));
+                accumulatedResults.addAll(Funcy.transformList(Arrays.asList(response), AWSScanAPCommandResult::new));
                 log.d("Latest accumulated scan results: " + accumulatedResults);
                 return set(accumulatedResults);
             }

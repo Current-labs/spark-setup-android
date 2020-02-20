@@ -59,6 +59,7 @@ public class AWSCommandClient extends CommandClient {
             return null;
         }
 
+        log.d("Command response (raw): " + response.body().string());
         return gson.fromJson(response.body().string(), responseType);
     }
 }
