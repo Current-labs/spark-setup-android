@@ -38,16 +38,16 @@ public class AWSScanApCommand extends NoArgsCommand {
 
 
     public static class Scan extends ScanApCommand.Scan {
-
-        public final String ssid;
-
         @SerializedName("auth")
         public final Integer wifiSecurityType;
 
+        @SerializedName("channel")
+        public final Integer channel;
+
         public Scan(String ssid, Integer wifiSecurityType, Integer channel) {
             super(ssid, wifiSecurityType, channel);
-            this.ssid = ssid;
             this.wifiSecurityType = wifiSecurityType;
+            this.channel = channel;
         }
 
         @Override
