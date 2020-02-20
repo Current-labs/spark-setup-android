@@ -34,6 +34,18 @@ public class SetupStepsFactory {
                 commandClient, reconnector, networkToConnectTo, networkSecretPlaintext, publicKey);
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public AWSConfigureAPStep newConfigureApStep(CommandClient commandClient, SetupStepApReconnector reconnector,
+                                              ScanApCommand.Scan networkToConnectTo, String networkSecretPlaintext) {
+        return new AWSConfigureAPStep(
+                StepConfig.newBuilder()
+                        .setMaxAttempts(MAX_RETRIES_CONFIGURE_AP)
+                        .setResultCode(SuccessActivity.RESULT_FAILURE_CONFIGURE)
+                        .setStepId(R.id.configure_device_wifi_credentials)
+                        .build(),
+                commandClient, reconnector, networkToConnectTo, networkSecretPlaintext);
+    }
+
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
     public ConnectDeviceToNetworkStep newConnectDeviceToNetworkStep(CommandClient commandClient, SetupStepApReconnector reconnector) {

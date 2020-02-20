@@ -24,6 +24,7 @@ import io.particle.android.sdk.devicesetup.R2;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.CommandClientFactory;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
+import io.particle.android.sdk.devicesetup.setupsteps.AWSConfigureAPStep;
 import io.particle.android.sdk.devicesetup.setupsteps.CheckIfDeviceClaimedStep;
 import io.particle.android.sdk.devicesetup.setupsteps.ConfigureAPStep;
 import io.particle.android.sdk.devicesetup.setupsteps.ConnectDeviceToNetworkStep;
@@ -117,7 +118,11 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         );
         Ui.setText(this, R.id.network_name, networkToConnectTo.ssid);
 
-        connectingProcessWorkerTask = new ConnectingProcessWorkerTask(this, buildSteps(), 15);
+        if (DeviceSetupState.productInfo.isParticleDevice()) {
+            connectingProcessWorkerTask = new ConnectingProcessWorkerTask(this, buildSteps(), 15);
+        } else {
+            connectingProcessWorkerTask = new ConnectingProcessWorkerTask(this, buildAWSSteps(), 15);
+        }
         connectingProcessWorkerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -171,6 +176,37 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         if (!BaseActivity.setupOnly) {
             steps.add(checkIfDeviceClaimedStep);
         }
+        return steps;
+    }
+
+    private List<SetupStep> buildAWSSteps() {
+        CommandClient commandClient = commandClientFactory.newClientUsingDefaultsForDevices(
+                wifiFacade, deviceSoftApSsid);
+        SetupStepApReconnector reconnector = new SetupStepApReconnector(
+                wifiFacade, apConnector, new Handler(), deviceSoftApSsid);
+
+        AWSConfigureAPStep configureAPStep = setupStepsFactory.newConfigureApStep(commandClient,
+                reconnector, networkToConnectTo, networkSecretPlaintext);
+
+        // TODO: Currently, firmware drops you immediately
+//        ConnectDeviceToNetworkStep connectDeviceToNetworkStep = setupStepsFactory
+//                .newConnectDeviceToNetworkStep(commandClient, reconnector);
+
+        WaitForDisconnectionFromDeviceStep waitForDisconnectionFromDeviceStep = setupStepsFactory
+                .newWaitForDisconnectionFromDeviceStep(deviceSoftApSsid, wifiFacade);
+
+        EnsureSoftApNotVisible ensureSoftApNotVisible = setupStepsFactory
+                .newEnsureSoftApNotVisible(deviceSoftApSsid, wifiFacade);
+
+        WaitForCloudConnectivityStep waitForLocalCloudConnectivityStep = setupStepsFactory
+                .newWaitForCloudConnectivityStep(getApplicationContext());
+
+        List<SetupStep> steps = list(
+                configureAPStep,
+//                connectDeviceToNetworkStep,
+                waitForDisconnectionFromDeviceStep,
+                ensureSoftApNotVisible,
+                waitForLocalCloudConnectivityStep);
         return steps;
     }
 }
