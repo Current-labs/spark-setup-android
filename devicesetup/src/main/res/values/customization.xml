@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cloud_provider.particle">Particle</string>
+    <string name="cloud_provider.aws">AWS</string>
 
     <string name="brand_name">Particle</string>
     <string name="app_name">@string/brand_name</string>

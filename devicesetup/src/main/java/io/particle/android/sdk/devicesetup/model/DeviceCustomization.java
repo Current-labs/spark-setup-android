@@ -24,6 +24,7 @@ public class DeviceCustomization implements Parcelable {
     // Skip the Name Your Device step
     private boolean skipNaming = false;
 
+    private int cloudProvider = R.string.cloud_provider_particle;
     private int brandName = R.string.brand_name;
     private int appName = R.string.app_name;
     private int deviceName = R.string.device_name;
@@ -105,6 +106,14 @@ public class DeviceCustomization implements Parcelable {
 
     public void setSkipNaming(boolean skipNaming) {
         this.skipNaming = skipNaming;
+    }
+
+    public int getCloudProvider() {
+        return cloudProvider;
+    }
+
+    public void setCloudProvider(int cloudProvider) {
+        this.cloudProvider = cloudProvider;
     }
 
     public int getBrandName() {
