@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Locale;
 
+import io.particle.android.sdk.devicesetup.R;
+import io.particle.android.sdk.devicesetup.commands.AWSDeviceIdCommand;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.DeviceIdCommand;
 import io.particle.android.sdk.devicesetup.commands.PublicKeyCommand;
@@ -40,6 +42,22 @@ public class DiscoverProcessWorker {
     // each with shortcut conditions for when they've already been fulfilled, instead of
     // this if-else/try-catch ladder.
     public void doTheThing() throws SetupStepException {
+        // Do a different thing for ESP32 devices
+        if (DeviceSetupState.productInfo.getCloudProvider() == R.string.cloud_provider_aws) {
+            if (!truthy(detectedDeviceID)) {
+                try {
+                    AWSDeviceIdCommand.Response response = client.sendCommand(
+                            new AWSDeviceIdCommand(), AWSDeviceIdCommand.Response.class);
+                    detectedDeviceID = response.deviceId;
+                    DeviceSetupState.deviceToBeSetUpId = detectedDeviceID;
+                    // TODO: do we use the product for anything?
+                } catch (IOException e) {
+                    throw new SetupStepException("Process died while trying to get the device ID", e);
+                }
+            }
+            return;
+        }
+
         // 1. get device ID
         if (!truthy(detectedDeviceID)) {
             try {
