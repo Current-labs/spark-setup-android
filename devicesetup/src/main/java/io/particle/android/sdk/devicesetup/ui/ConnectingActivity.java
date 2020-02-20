@@ -188,9 +188,8 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         AWSConfigureAPStep configureAPStep = setupStepsFactory.newConfigureApStep(commandClient,
                 reconnector, networkToConnectTo, networkSecretPlaintext);
 
-        // TODO: Currently, firmware drops you immediately
-//        ConnectDeviceToNetworkStep connectDeviceToNetworkStep = setupStepsFactory
-//                .newConnectDeviceToNetworkStep(commandClient, reconnector);
+        ConnectDeviceToNetworkStep connectDeviceToNetworkStep = setupStepsFactory
+                .newConnectDeviceToNetworkStep(commandClient, reconnector);
 
         WaitForDisconnectionFromDeviceStep waitForDisconnectionFromDeviceStep = setupStepsFactory
                 .newWaitForDisconnectionFromDeviceStep(deviceSoftApSsid, wifiFacade);
@@ -203,7 +202,7 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
 
         List<SetupStep> steps = list(
                 configureAPStep,
-//                connectDeviceToNetworkStep,
+                connectDeviceToNetworkStep,
                 waitForDisconnectionFromDeviceStep,
                 ensureSoftApNotVisible,
                 waitForLocalCloudConnectivityStep);

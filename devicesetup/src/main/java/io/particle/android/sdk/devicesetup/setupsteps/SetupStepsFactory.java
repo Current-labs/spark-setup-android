@@ -59,6 +59,16 @@ public class SetupStepsFactory {
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public ConnectDeviceToNetworkStep newConnectDeviceToNetworkStep() {
+        return new AWSConnectDeviceToNetworkStep(
+                StepConfig.newBuilder()
+                        .setMaxAttempts(MAX_RETRIES_CONNECT_AP)
+                        .setResultCode(SuccessActivity.RESULT_FAILURE_CONFIGURE)
+                        .setStepId(R.id.connect_to_wifi_network)
+                        .build());
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     public WaitForDisconnectionFromDeviceStep newWaitForDisconnectionFromDeviceStep(SSID deviceSoftApSsid,
                                                                                     WifiFacade wifiFacade) {
         return new WaitForDisconnectionFromDeviceStep(
