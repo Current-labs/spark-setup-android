@@ -51,6 +51,13 @@ public class ParticleDeviceSetupLibrary {
          * Value is undefined if EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL is false.
          */
         String EXTRA_CONFIGURED_DEVICE_ID = "EXTRA_CONFIGURED_DEVICE_ID";
+
+        /**
+         * A String extra indicating the product type of the device
+         * <p/>
+         * Value is undefined if EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL is false.
+         */
+        String EXTRA_CONFIGURED_DEVICE_PRODUCT = "EXTRA_CONFIGURED_DEVICE_PRODUCT";
     }
 
 
@@ -62,7 +69,7 @@ public class ParticleDeviceSetupLibrary {
      */
     public static abstract class DeviceSetupCompleteReceiver extends BroadcastReceiver {
 
-        public abstract void onSetupSuccess(@NonNull String configuredDeviceId);
+        public abstract void onSetupSuccess(@NonNull String configuredDeviceId, String product);
 
         // FIXME: add some extra error information in onSetupFailed()
         public abstract void onSetupFailure();
@@ -87,8 +94,9 @@ public class ParticleDeviceSetupLibrary {
             boolean success = intent.getBooleanExtra(
                     DeviceSetupCompleteContract.EXTRA_DEVICE_SETUP_WAS_SUCCESSFUL, false);
             String deviceId = intent.getStringExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID);
+            String product = intent.getStringExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_PRODUCT);
             if (success && deviceId != null) {
-                onSetupSuccess(deviceId);
+                onSetupSuccess(deviceId, product);
             } else {
                 onSetupFailure();
             }

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.security.PublicKey;
 import java.util.Locale;
 
-import io.particle.android.sdk.devicesetup.R;
 import io.particle.android.sdk.devicesetup.commands.AWSDeviceIdCommand;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.DeviceIdCommand;
@@ -50,7 +49,7 @@ public class DiscoverProcessWorker {
                             new AWSDeviceIdCommand(), AWSDeviceIdCommand.Response.class);
                     detectedDeviceID = response.deviceId;
                     DeviceSetupState.deviceToBeSetUpId = detectedDeviceID;
-                    // TODO: do we use the product for anything?
+                    DeviceSetupState.product = response.product;
                 } catch (IOException e) {
                     throw new SetupStepException("Process died while trying to get the device ID", e);
                 }
@@ -66,6 +65,13 @@ public class DiscoverProcessWorker {
                 detectedDeviceID = response.deviceIdHex.toLowerCase(Locale.ROOT);
                 DeviceSetupState.deviceToBeSetUpId = detectedDeviceID;
                 isDetectedDeviceClaimed = truthy(response.isClaimed);
+                if (DeviceSetupState.previouslyConnectedWifiNetwork != null) {
+                    String ssid = DeviceSetupState.previouslyConnectedWifiNetwork.toString();
+                    int indexOfDash = ssid.lastIndexOf('-');
+                    if (indexOfDash > 0) {
+                        DeviceSetupState.product = ssid.substring(0, indexOfDash);
+                    }
+                }
             } catch (IOException e) {
                 throw new SetupStepException("Process died while trying to get the device ID", e);
             }

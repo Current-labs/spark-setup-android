@@ -16,6 +16,7 @@ public class DeviceSetupState {
     static volatile String claimCode;
     static volatile PublicKey publicKey;
     static volatile String deviceToBeSetUpId;
+    static volatile String product;
     public static volatile DeviceCustomization productInfo = new DeviceCustomization();
 
     static void reset() {

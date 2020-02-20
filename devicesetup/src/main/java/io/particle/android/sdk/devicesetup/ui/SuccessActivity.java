@@ -196,6 +196,8 @@ public class SuccessActivity extends BaseActivity {
         if (isSuccess) {
             result.putExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_ID,
                     DeviceSetupState.deviceToBeSetUpId);
+            result.putExtra(DeviceSetupCompleteContract.EXTRA_CONFIGURED_DEVICE_PRODUCT,
+                    DeviceSetupState.product);
         }
         LocalBroadcastManager.getInstance(context).sendBroadcast(result);
 
