@@ -3,8 +3,10 @@ package io.particle.android.sdk.devicesetup.commands;
 import android.support.annotation.CheckResult;
 
 import com.google.gson.Gson;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ public class AWSCommandClient extends CommandClient {
 
     private static final TLog log = TLog.get(AWSCommandClient.class);
     private static final Gson gson = new Gson();
+
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private final String ipAddress;
 
@@ -47,10 +51,15 @@ public class AWSCommandClient extends CommandClient {
         OkHttpClient client = new OkHttpClient();
         String url = "http://" + ipAddress + "/rpc/" + commandName;
 
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
+        Request.Builder builder = new Request.Builder()
+                .url(url);
 
+        if (commandArgs.length() > 0) {
+            RequestBody body = RequestBody.create(JSON, commandArgs);
+            builder = builder.post(body);
+        }
+
+        Request request = builder.build();
         Response response = client.newCall(request).execute();
 
         // if no response defined, just exit early.
