@@ -189,7 +189,7 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                 reconnector, networkToConnectTo, networkSecretPlaintext);
 
         ConnectDeviceToNetworkStep connectDeviceToNetworkStep = setupStepsFactory
-                .newConnectDeviceToNetworkStep(commandClient, reconnector);
+                .newConnectDeviceToNetworkStep();
 
         WaitForDisconnectionFromDeviceStep waitForDisconnectionFromDeviceStep = setupStepsFactory
                 .newWaitForDisconnectionFromDeviceStep(deviceSoftApSsid, wifiFacade);
