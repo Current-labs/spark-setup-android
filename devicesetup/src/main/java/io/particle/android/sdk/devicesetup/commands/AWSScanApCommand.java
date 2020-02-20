@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Arrays;
 import java.util.List;
 
+import io.particle.android.sdk.devicesetup.commands.data.WifiSecurity;
+
 public class AWSScanApCommand extends NoArgsCommand {
 
     @Override
@@ -48,6 +50,24 @@ public class AWSScanApCommand extends NoArgsCommand {
             super(ssid, wifiSecurityType, channel);
             this.wifiSecurityType = wifiSecurityType;
             this.channel = channel;
+        }
+
+        public Integer getParticleWifiSecurityType() {
+            switch (wifiSecurityType) {
+                case 0:
+                    return WifiSecurity.OPEN.asInt();
+                case 1:
+                    return WifiSecurity.WEP_PSK.asInt();
+                case 2:
+                    return WifiSecurity.WPA_MIXED_PSK.asInt();
+                case 3:
+                case 4:
+                    return WifiSecurity.WPA2_MIXED_PSK.asInt();
+                case 5:
+                    return 0x02000000;
+                default:
+                    return 69;
+            }
         }
 
         @Override

@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import io.particle.android.sdk.devicesetup.ParticleDeviceSetupLibrary;
 import io.particle.android.sdk.devicesetup.R;
 import io.particle.android.sdk.devicesetup.R2;
+import io.particle.android.sdk.devicesetup.commands.AWSScanApCommand;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
 import io.particle.android.sdk.devicesetup.commands.data.WifiSecurity;
 import io.particle.android.sdk.di.ApModule;
@@ -93,6 +94,10 @@ public class PasswordEntryActivity extends BaseActivity {
     }
 
     private String getSecurityTypeMsg() {
+        Integer wifiSecurityType = networkToConnectTo.wifiSecurityType;
+        if (!DeviceSetupState.productInfo.isParticleDevice()) {
+            wifiSecurityType = ((AWSScanApCommand.Scan) networkToConnectTo).getParticleWifiSecurityType();
+        }
         WifiSecurity securityType = WifiSecurity.fromInteger(networkToConnectTo.wifiSecurityType);
         switch (securityType) {
             case WEP_SHARED:
