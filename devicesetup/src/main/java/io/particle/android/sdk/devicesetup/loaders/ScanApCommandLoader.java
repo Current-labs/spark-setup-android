@@ -7,9 +7,12 @@ import java.util.Set;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import io.particle.android.sdk.devicesetup.commands.AWSScanApCommand;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
+import io.particle.android.sdk.devicesetup.model.AWSScanAPCommandResult;
 import io.particle.android.sdk.devicesetup.model.ScanAPCommandResult;
+import io.particle.android.sdk.devicesetup.ui.DeviceSetupState;
 import io.particle.android.sdk.utils.BetterAsyncTaskLoader;
 import io.particle.android.sdk.utils.Funcy;
 import io.particle.android.sdk.utils.TLog;
@@ -60,6 +63,16 @@ public class ScanApCommandLoader extends BetterAsyncTaskLoader<Set<ScanAPCommand
     @Override
     public Set<ScanAPCommandResult> loadInBackground() {
         try {
+            // Do a different thing for ESP32 devices
+            if (!DeviceSetupState.productInfo.isParticleDevice()) {
+                AWSScanApCommand.Response response = commandClient.sendCommand(
+                        new AWSScanApCommand(), AWSScanApCommand.Response.class);
+                // TODO: not sure if necessary to duplicate or just reuse
+                accumulatedResults.addAll(Funcy.transformList(response.getScans(), AWSScanAPCommandResult::new));
+                log.d("Latest accumulated scan results: " + accumulatedResults);
+                return set(accumulatedResults);
+            }
+
             ScanApCommand.Response response = commandClient.sendCommand(new ScanApCommand(),
                     ScanApCommand.Response.class);
             accumulatedResults.addAll(Funcy.transformList(response.getScans(), ScanAPCommandResult::new));
