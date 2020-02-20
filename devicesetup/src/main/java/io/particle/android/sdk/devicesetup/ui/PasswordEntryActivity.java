@@ -65,9 +65,16 @@ public class PasswordEntryActivity extends BaseActivity {
         SEGAnalytics.screen("Device Setup: Password Entry Screen");
         ParticleUi.enableBrandLogoInverseVisibilityAgainstSoftKeyboard(this);
 
-        networkToConnectTo = gson.fromJson(
-                getIntent().getStringExtra(EXTRA_NETWORK_TO_CONFIGURE),
-                ScanApCommand.Scan.class);
+        if (DeviceSetupState.productInfo.isParticleDevice()) {
+            networkToConnectTo = gson.fromJson(
+                    getIntent().getStringExtra(EXTRA_NETWORK_TO_CONFIGURE),
+                    ScanApCommand.Scan.class);
+        } else {
+            AWSScanApCommand.Scan network = gson.fromJson(
+                    getIntent().getStringExtra(EXTRA_NETWORK_TO_CONFIGURE),
+                    AWSScanApCommand.Scan.class);
+            networkToConnectTo = new AWSScanApCommand.Scan(network.ssid, network.getParticleWifiSecurityType(), network.channel);
+        }
         softApSSID = getIntent().getParcelableExtra(EXTRA_SOFT_AP_SSID);
         passwordBox.requestFocus();
         initViews();
