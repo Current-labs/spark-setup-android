@@ -4,7 +4,6 @@ package io.particle.android.sdk.devicesetup.setupsteps;
 import java.io.IOException;
 
 import io.particle.android.sdk.devicesetup.commands.AWSConfigureApCommand;
-import io.particle.android.sdk.devicesetup.commands.AWSScanApCommand;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
 
@@ -13,7 +12,7 @@ public class AWSConfigureAPStep extends SetupStep {
 
     private final CommandClient commandClient;
     private final SetupStepApReconnector workerThreadApConnector;
-    private final AWSScanApCommand.Scan networkToConnectTo;
+    private final ScanApCommand.Scan networkToConnectTo;
     private final String networkSecretPlaintext;
 
     private volatile boolean commandSent = false;
@@ -24,7 +23,7 @@ public class AWSConfigureAPStep extends SetupStep {
         super(stepConfig);
         this.commandClient = commandClient;
         this.workerThreadApConnector = workerThreadApConnector;
-        this.networkToConnectTo = (AWSScanApCommand.Scan) networkToConnectTo;
+        this.networkToConnectTo = networkToConnectTo;
         this.networkSecretPlaintext = networkSecretPlaintext;
     }
 
