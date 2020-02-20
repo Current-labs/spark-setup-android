@@ -111,5 +111,3 @@ if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 }
-
-apply plugin: 'com.getkeepsafe.dexcount'
