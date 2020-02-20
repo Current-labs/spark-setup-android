@@ -11,6 +11,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import io.particle.android.sdk.devicesetup.commands.AWSScanApCommand;
 import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.ScanApCommand;
+import io.particle.android.sdk.devicesetup.model.AWSScanAPCommandResult;
 import io.particle.android.sdk.devicesetup.model.ScanAPCommandResult;
 import io.particle.android.sdk.devicesetup.ui.DeviceSetupState;
 import io.particle.android.sdk.utils.BetterAsyncTaskLoader;
@@ -67,7 +68,7 @@ public class ScanApCommandLoader extends BetterAsyncTaskLoader<Set<ScanAPCommand
             if (!DeviceSetupState.productInfo.isParticleDevice()) {
                 AWSScanApCommand.Scan[] response = commandClient.sendCommand(
                         new AWSScanApCommand(), AWSScanApCommand.Scan[].class);
-                accumulatedResults.addAll(Funcy.transformList(Arrays.asList(response), ScanAPCommandResult::new));
+                accumulatedResults.addAll(Funcy.transformList(Arrays.asList(response), AWSScanAPCommandResult::new));
             } else {
                 ScanApCommand.Response response = commandClient.sendCommand(new ScanApCommand(),
                         ScanApCommand.Response.class);

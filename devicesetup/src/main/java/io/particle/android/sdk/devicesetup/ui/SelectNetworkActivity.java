@@ -20,6 +20,7 @@ import io.particle.android.sdk.devicesetup.commands.CommandClient;
 import io.particle.android.sdk.devicesetup.commands.CommandClientFactory;
 import io.particle.android.sdk.devicesetup.commands.data.WifiSecurity;
 import io.particle.android.sdk.devicesetup.loaders.ScanApCommandLoader;
+import io.particle.android.sdk.devicesetup.model.AWSScanAPCommandResult;
 import io.particle.android.sdk.devicesetup.model.ScanAPCommandResult;
 import io.particle.android.sdk.di.ApModule;
 import io.particle.android.sdk.utils.SEGAnalytics;
@@ -72,7 +73,11 @@ public class SelectNetworkActivity extends RequiresWifiScansActivity
 
     @Override
     public void onNetworkSelected(ScanAPCommandResult selectedNetwork) {
-        if (WifiSecurity.isEnterpriseNetwork(selectedNetwork.scan.wifiSecurityType)) {
+        Integer wifiSecurityType = selectedNetwork.scan.wifiSecurityType;
+        if (!DeviceSetupState.productInfo.isParticleDevice()) {
+            wifiSecurityType = ((AWSScanAPCommandResult) selectedNetwork).scan.wifiSecurityType;
+        }
+        if (WifiSecurity.isEnterpriseNetwork(wifiSecurityType)) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.enterprise_networks_not_supported))
                     .setPositiveButton(R.string.ok, (dialog, which) -> dialog.dismiss())
