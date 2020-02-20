@@ -54,7 +54,7 @@ public class AWSCommandClient extends CommandClient {
         Request.Builder builder = new Request.Builder()
                 .url(url);
 
-        if (commandArgs.length() > 0) {
+        if (commandArgs != null) {
             RequestBody body = RequestBody.create(JSON, commandArgs);
             builder = builder.post(body);
         }
