@@ -20,7 +20,7 @@ public class CommandClientFactory {
 
     // FIXME: set these defaults in a resource file?
     public CommandClient newClientUsingDefaultsForDevices(WifiFacade wifiFacade, SSID softApSSID) {
-        if (DeviceSetupState.productInfo.getCloudProvider() == R.string.cloud_provider_particle) {
+        if (DeviceSetupState.productInfo.isParticleDevice()) {
             return newClient(wifiFacade, softApSSID, "192.168.0.1", 5609);
         } else {
             return newAWSClient(wifiFacade, softApSSID, "192.168.4.1", 80);

@@ -43,7 +43,7 @@ public class DiscoverProcessWorker {
     // this if-else/try-catch ladder.
     public void doTheThing() throws SetupStepException {
         // Do a different thing for ESP32 devices
-        if (DeviceSetupState.productInfo.getCloudProvider() == R.string.cloud_provider_aws) {
+        if (!DeviceSetupState.productInfo.isParticleDevice()) {
             if (!truthy(detectedDeviceID)) {
                 try {
                     AWSDeviceIdCommand.Response response = client.sendCommand(
