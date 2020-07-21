@@ -24,6 +24,9 @@ public class DeviceCustomization implements Parcelable {
     // Skip the Name Your Device step
     private boolean skipNaming = false;
 
+    // Whether we are reconnecting to wifi or setting up
+    private boolean reconnectingWifi = false;
+
     private boolean isParticleDevice = true;
 
     private int brandName = R.string.brand_name;
@@ -107,6 +110,14 @@ public class DeviceCustomization implements Parcelable {
 
     public void setSkipNaming(boolean skipNaming) {
         this.skipNaming = skipNaming;
+    }
+
+    public boolean isReconnectingWifi() {
+        return reconnectingWifi;
+    }
+
+    public void setReconnectingWifi(boolean reconnectingWifi) {
+        this.reconnectingWifi = reconnectingWifi;
     }
 
     public boolean isParticleDevice() {
@@ -488,6 +499,7 @@ public class DeviceCustomization implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.skipNaming ? 1 : 0);
+        dest.writeInt(this.reconnectingWifi ? 1 : 0);
         dest.writeInt(this.brandName);
         dest.writeInt(this.appName);
         dest.writeInt(this.deviceName);
@@ -540,6 +552,7 @@ public class DeviceCustomization implements Parcelable {
 
     protected DeviceCustomization(Parcel in) {
         this.skipNaming = in.readInt() == 1;
+        this.reconnectingWifi = in.readInt() == 1;
         this.brandName = in.readInt();
         this.appName = in.readInt();
         this.deviceName = in.readInt();

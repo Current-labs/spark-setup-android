@@ -41,8 +41,10 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
 
     private static final TLog log = TLog.get(GetReadyActivity.class);
 
-    @Inject protected ParticleCloud sparkCloud;
-    @Inject protected SoftAPConfigRemover softAPConfigRemover;
+    @Inject
+    protected ParticleCloud sparkCloud;
+    @Inject
+    protected SoftAPConfigRemover softAPConfigRemover;
 
     private AsyncApiWorker<ParticleCloud, ClaimCodeResponse> claimCodeWorker;
 
@@ -72,8 +74,11 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
                         .put("setup_button_identifier", getString(R.string.mode_button_name))
                         .format());
 
+        int titleText = DeviceSetupState.productInfo.isReconnectingWifi()
+                ? R.string.get_ready_reconnect_title_text
+                : R.string.get_ready_title_text;
         Ui.setText(this, R.id.get_ready_text_title,
-                Phrase.from(this, R.string.get_ready_title_text)
+                Phrase.from(this, titleText)
                         .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .format());
     }

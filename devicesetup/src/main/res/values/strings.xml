@@ -2,11 +2,12 @@
 <resources>
 
     <!-- Phrase-templated strings -->
-    <string name="msg_device_not_listed">{device_name} not listed here? Hold the {setup_button_identifier} for three seconds to put it in setup mode; the {indicator_light} should turn {indicator_light_setup_color_name}</string>
+    <string name="msg_device_not_listed">{device_name} not listed here? Hold the {setup_button_identifier} until the {indicator_light} turns {indicator_light_setup_color_name}</string>
     <string name="get_ready_title_text">Time to set up your {device_name}!</string>
+    <string name="get_ready_reconnect_title_text">Reconnect your {device_name} to Wi-Fi</string>
     <string name="get_ready_text"><![CDATA[\n
 \u2022 Please power on your {device_name} by plugging it in.\n\n
-\u2022 The indicator light should blink {indicator_light_setup_color_name}. If this {device_name} has been set up before, hold the {setup_button_identifier} for 3 seconds to set up again.\n\n
+\u2022 The indicator light should be blinking {indicator_light_setup_color_name}. If this {device_name} has been set up before, hold the {setup_button_identifier} until the {indicator_light} turns {indicator_light_setup_color_name}.\n\n
 \u2022 Make sure your Android device is connected to the internet.\n\n
 \u2022 Tap the READY button to proceed.]]></string>
     <string name="wifi_list_header_text">Choose your {device_name}</string>
@@ -19,7 +20,7 @@
     <string name="set_up_another_device">Set up another {device_name}</string>
     <string name="empty_soft_ap_list_text">(No {device_name} devices found)</string>
     <string name="connecting_to_soft_ap">Connecting to {device_name}…</string>
-    <string name="unable_to_connect_to_soft_ap">Please try running setup again after resetting your {device_name} and putting it back in blinking blue listen mode if needed.</string>
+    <string name="unable_to_connect_to_soft_ap">Please try running setup again after holding the {setup_button_identifier} until the {indicator_light} turns {indicator_light_setup_color_name} if it is not already blinking {indicator_light_setup_color_name}.</string>
 
     <!-- regular strings -->
     <string name="set_up_your_product">Get Started</string>
@@ -83,11 +84,11 @@
     <string name="enable_wifi">Enable Wi-Fi</string>
     <string name="enable_location">Enable Location</string>
     <string name="exit_setup">Exit setup</string>
-    <string name="location_permission_dialog_text">Setup needs to scan Wi-Fi to find your new device.\n\nBecause these scans could also reveal your location, setup requires the Location permission.\n\nSetup will continue after you press ALLOW on the next screen.</string>
+    <string name="location_permission_dialog_text">Setup needs to scan Wi-Fi to find your device.\n\nBecause Wi-Fi scans could also reveal your location, setup requires you to acknowledge this.\n\nThis app will not use your location for any purpose other than to scan for Wi-Fi.\n\nSetup will continue after you press ALLOW on the next screen.</string>
     <string name="location_permission_dialog_title">Permission needed</string>
     <string name="got_it">got it</string>
     <string name="location_permission_denied_dialog_title">Location permission required</string>
-    <string name="location_permission_denied_dialog_text"><![CDATA[The Location permission has been disabled for this app.  Please change this in Permissions for this app under Settings -> Apps.]]></string>
+    <string name="location_permission_denied_dialog_text"><![CDATA[The Location permission has been disabled for this app. Please change this in Permissions for this app under Settings -> Apps.]]></string>
     <string name="reset_password_dialog_title">Reset password</string>
     <string name="reset_paassword_dialog_please_enter_a_valid_email">Please enter a valid email address.</string>
     <string name="create_account_passswords_do_not_match">Passwords do not match.</string>
@@ -107,9 +108,8 @@
     <string name="device_naming_hint">none</string>
     <string name="device_naming_label">Name your new device:</string>
     <string name="device_naming_failure">Failed to change device name</string>
-    <string name="location_required_message">This access allows you to pair your Android device with
-        your Photon to complete the setup process. Particle will not use location data for any other
-        purposes.
+    <string name="location_required_message">This access allows you to pair your Android device to
+        complete the setup process. This app will not use location data for any other purposes.
     </string>
 
 </resources>
