@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.particle.android.sdk.accountsetup.LoginActivity;
 import io.particle.android.sdk.cloud.ParticleCloud;
 import io.particle.android.sdk.devicesetup.ApConnector;
 import io.particle.android.sdk.devicesetup.ParticleDeviceSetupLibrary;
@@ -356,7 +355,9 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         }
 
         String errorMsg = Phrase.from(this, R.string.unable_to_connect_to_soft_ap)
-                .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
+                .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
+                .put("setup_button_identifier", getString(R.string.mode_button_name))
+                .put("indicator_light", getString(R.string.indicator_light))
                 .format().toString();
 
         new AlertDialog.Builder(this)

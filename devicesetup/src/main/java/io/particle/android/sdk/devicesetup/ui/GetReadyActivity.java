@@ -72,6 +72,7 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
                         .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
                         .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
                         .put("setup_button_identifier", getString(R.string.mode_button_name))
+                        .put("indicator_light", getString(R.string.indicator_light))
                         .format());
 
         int titleText = DeviceSetupState.productInfo.isReconnectingWifi()
