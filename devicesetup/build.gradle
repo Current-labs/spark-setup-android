@@ -34,7 +34,7 @@ ext {
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     dexOptions {
         javaMaxHeapSize "2g"
@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -51,6 +51,7 @@ android {
     }
 
     compileOptions {
+        incremental false
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -85,20 +86,22 @@ dependencies {
     implementation 'io.particle:cloudsdk:0.4.8'
 
     implementation 'com.squareup.phrase:phrase:1.0.3'
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
     implementation 'com.segment.analytics.android:analytics:4.2.6'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
 
     implementation 'com.google.dagger:dagger:2.24'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.24'
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.jakewharton:butterknife:10.2.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
 
     //Multidex
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
 
     // For ESP32 setup
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'

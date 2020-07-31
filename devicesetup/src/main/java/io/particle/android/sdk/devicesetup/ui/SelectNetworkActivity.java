@@ -3,9 +3,10 @@ package io.particle.android.sdk.devicesetup.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.Loader;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.loader.content.Loader;
 
 import java.util.Set;
 

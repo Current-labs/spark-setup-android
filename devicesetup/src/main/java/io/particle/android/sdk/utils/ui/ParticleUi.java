@@ -1,10 +1,10 @@
 package io.particle.android.sdk.utils.ui;
 
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
+import androidx.fragment.app.FragmentActivity;
+
 import io.particle.android.sdk.devicesetup.R;
-import io.particle.android.sdk.devicesetup.ui.DiscoverDeviceActivity;
 
 
 public class ParticleUi {

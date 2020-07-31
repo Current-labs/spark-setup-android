@@ -1,9 +1,10 @@
 package io.particle.android.sdk.utils.ui;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 
 public class Toaster {
