@@ -42,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
             ViewPump.init(ViewPump.builder()
                     .addInterceptor(new CalligraphyInterceptor(
                             new CalligraphyConfig.Builder()
-                                    .setDefaultFontPath(getString(R.string.normal_text_font_name))
+                                    .setDefaultFontPath(newBase.getString(R.string.normal_text_font_name))
                                     .setFontAttrId(R.attr.fontPath)
                                     .build()))
                     .build());
