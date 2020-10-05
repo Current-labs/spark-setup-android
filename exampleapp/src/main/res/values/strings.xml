@@ -9,4 +9,7 @@
 
     <!-- Enable full logging in the cloud SDK -->
     <string name="http_log_level">FULL</string>
+
+    <string name="aws_ssid_prefix">ReefBreeders-Light</string>
+    <string name="particle_ssid_prefix">RapidLED-Corona</string>
 </resources>

@@ -6,7 +6,6 @@ import io.particle.android.sdk.devicesetup.SetupProcessException;
 import io.particle.android.sdk.utils.EZ;
 import io.particle.android.sdk.utils.Funcy;
 import io.particle.android.sdk.utils.Funcy.Predicate;
-import io.particle.android.sdk.utils.Preconditions;
 import io.particle.android.sdk.utils.SSID;
 import io.particle.android.sdk.utils.WifiFacade;
 
@@ -23,7 +22,7 @@ public class EnsureSoftApNotVisible extends SetupStep {
 
     EnsureSoftApNotVisible(StepConfig stepConfig, SSID softApSSID, WifiFacade wifiFacade) {
         super(stepConfig);
-        Preconditions.checkNotNull(softApSSID, "softApSSID cannot be null.");
+//        Preconditions.checkNotNull(softApSSID, "softApSSID cannot be null.");
         this.wifiFacade = wifiFacade;
         this.softApName = softApSSID;
         this.matchesSoftApSSID = softApName::equals;
@@ -31,17 +30,22 @@ public class EnsureSoftApNotVisible extends SetupStep {
 
     @Override
     public boolean isStepFulfilled() {
-        return wasFulfilledOnce && !isSoftApVisible();
+        return wasFulfilledOnce; //&& !isSoftApVisible();
     }
 
     @Override
     protected void onRunStep() throws SetupStepException, SetupProcessException {
-        if (!wasFulfilledOnce) {
-            onStepNeverYetFulfilled();
+//        if (!wasFulfilledOnce) {
+//            onStepNeverYetFulfilled();
+//
+//        } else {
+//            onStepPreviouslyFulfilled();
+//        }
 
-        } else {
-            onStepPreviouslyFulfilled();
-        }
+        log.d("DO ABSOLUTELY NOTHING LOL!");
+        EZ.threadSleep(1000);
+
+        wasFulfilledOnce = true;
     }
 
     // Before the soft AP disappears for the FIRST time, be lenient in allowing for retries if

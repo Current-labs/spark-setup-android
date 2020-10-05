@@ -98,7 +98,7 @@ public class SetupStepsFactory {
                 StepConfig.newBuilder()
                         .setMaxAttempts(MAX_RETRIES_DISCONNECT_FROM_DEVICE)
                         .setResultCode(SuccessActivity.RESULT_FAILURE_NO_DISCONNECT)
-                        .setStepId(R.id.check_for_internet_connectivity)
+                        .setStepId(R.id.wait_for_device_cloud_connection)
                         .build(), context.getApplicationContext());
     }
 

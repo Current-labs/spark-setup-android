@@ -28,7 +28,6 @@ import io.particle.android.sdk.devicesetup.setupsteps.AWSConfigureAPStep;
 import io.particle.android.sdk.devicesetup.setupsteps.CheckIfDeviceClaimedStep;
 import io.particle.android.sdk.devicesetup.setupsteps.ConfigureAPStep;
 import io.particle.android.sdk.devicesetup.setupsteps.ConnectDeviceToNetworkStep;
-import io.particle.android.sdk.devicesetup.setupsteps.EnsureSoftApNotVisible;
 import io.particle.android.sdk.devicesetup.setupsteps.SetupStep;
 import io.particle.android.sdk.devicesetup.setupsteps.SetupStepApReconnector;
 import io.particle.android.sdk.devicesetup.setupsteps.SetupStepsFactory;
@@ -46,7 +45,7 @@ import io.particle.android.sdk.utils.ui.Ui;
 import static io.particle.android.sdk.utils.Py.list;
 
 
-public class ConnectingActivity extends RequiresWifiScansActivity {
+public class ConnectingActivity extends BaseActivity {
 
     public static final String
             EXTRA_NETWORK_TO_CONFIGURE = "EXTRA_NETWORK_TO_CONFIGURE",
@@ -158,9 +157,6 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         WaitForDisconnectionFromDeviceStep waitForDisconnectionFromDeviceStep = setupStepsFactory
                 .newWaitForDisconnectionFromDeviceStep(deviceSoftApSsid, wifiFacade);
 
-        EnsureSoftApNotVisible ensureSoftApNotVisible = setupStepsFactory
-                .newEnsureSoftApNotVisible(deviceSoftApSsid, wifiFacade);
-
         WaitForCloudConnectivityStep waitForLocalCloudConnectivityStep = setupStepsFactory
                 .newWaitForCloudConnectivityStep(getApplicationContext());
 
@@ -171,7 +167,6 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                 configureAPStep,
                 connectDeviceToNetworkStep,
                 waitForDisconnectionFromDeviceStep,
-                ensureSoftApNotVisible,
                 waitForLocalCloudConnectivityStep);
         if (!BaseActivity.setupOnly) {
             steps.add(checkIfDeviceClaimedStep);
@@ -194,9 +189,6 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
         WaitForDisconnectionFromDeviceStep waitForDisconnectionFromDeviceStep = setupStepsFactory
                 .newWaitForDisconnectionFromDeviceStep(deviceSoftApSsid, wifiFacade);
 
-        EnsureSoftApNotVisible ensureSoftApNotVisible = setupStepsFactory
-                .newEnsureSoftApNotVisible(deviceSoftApSsid, wifiFacade);
-
         WaitForCloudConnectivityStep waitForLocalCloudConnectivityStep = setupStepsFactory
                 .newWaitForCloudConnectivityStep(getApplicationContext());
 
@@ -204,7 +196,6 @@ public class ConnectingActivity extends RequiresWifiScansActivity {
                 configureAPStep,
                 connectDeviceToNetworkStep,
                 waitForDisconnectionFromDeviceStep,
-                ensureSoftApNotVisible,
                 waitForLocalCloudConnectivityStep);
         return steps;
     }

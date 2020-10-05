@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
 
@@ -19,6 +21,7 @@ import androidx.loader.content.Loader;
 
 import com.squareup.phrase.Phrase;
 
+import java.util.Locale;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -75,6 +78,9 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
 
     private SSID selectedSoftApSSID;
 
+    private static final int CHECK_SSID_INTERVAL = 2000; // interval for checking the currently connected SSID
+    private Handler checkSSIDHandler;
+
     @OnClick(R2.id.action_troubleshooting)
     protected void onTroubleshootingClick(View v) {
         Uri uri = Uri.parse(v.getContext().getString(R.string.troubleshooting_uri));
@@ -103,6 +109,12 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         wifiListFragment = Ui.findFrag(this, R.id.wifi_list_fragment);
         ConnectToApFragment.ensureAttached(this);
         resetWorker();
+
+        checkSSIDHandler = new Handler();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // TODO show alternate UI
+        }
 
         Ui.setDrawable(this, R.id.imageView, DeviceSetupState.productInfo.getDeviceImageSmall());
 
@@ -137,11 +149,14 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (!wifiFacade.isWifiEnabled()) {
-            onWifiDisabled();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !canGetLocation()) {
-            onLocationDisabled();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            if (!wifiFacade.isWifiEnabled()) {
+                onWifiDisabled();
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !canGetLocation()) {
+                onLocationDisabled();
+            }
         }
     }
 
@@ -149,12 +164,37 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     protected void onResume() {
         super.onResume();
         isResumed = true;
+
+        startCheckSSIDTask();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isResumed = false;
+
+        stopCheckSSIDTask();
+    }
+
+    Runnable checkSSIDTask = new Runnable() {
+        @Override
+        public void run() {
+              try {
+                   checkSSID();
+              } finally {
+                   // 100% guarantee that this always happens, even if
+                   // your update method throws an exception
+                   checkSSIDHandler.postDelayed(checkSSIDTask, CHECK_SSID_INTERVAL);
+              }
+        }
+    };
+
+    void startCheckSSIDTask() {
+        checkSSIDTask.run();
+    }
+
+    void stopCheckSSIDTask() {
+        checkSSIDHandler.removeCallbacks(checkSSIDTask);
     }
 
     private void resetWorker() {
@@ -175,6 +215,17 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
                     finish();
                 }))
                 .show();
+    }
+
+    private void checkSSID() {
+        WifiInfo wifiInfo = wifiFacade.getConnectionInfo();
+        SSID currentSoftApSSID = SSID.from(wifiInfo);
+
+        String softApPrefix = getString(DeviceSetupState.productInfo.getNetworkNamePrefix()).toLowerCase(Locale.ROOT);
+        if (currentSoftApSSID.toString().toLowerCase(Locale.ROOT).startsWith(softApPrefix)) {
+            selectedSoftApSSID = currentSoftApSSID;
+            startConnectWorker();
+        }
     }
 
     private boolean canGetLocation() {
@@ -213,6 +264,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         WifiConfiguration wifiConfig = ApConnector.buildUnsecuredConfig(selectedNetwork.getSsid());
         selectedSoftApSSID = selectedNetwork.getSsid();
         resetWorker();
+        stopCheckSSIDTask();
         connectToSoftAp(wifiConfig);
     }
 
