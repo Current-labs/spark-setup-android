@@ -139,6 +139,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
             findViewById(R.id.wifi_list_fragment).setVisibility(View.GONE);
             findViewById(R.id.msg_device_not_listed).setVisibility(View.GONE);
             findViewById(R.id.logged_in_as).setVisibility(View.GONE);
+            findViewById(R.id.imageView).setVisibility(View.GONE);
         } else {
             Ui.setText(this, R.id.msg_device_not_listed,
                     Phrase.from(this, R.string.msg_device_not_listed)
