@@ -3,6 +3,11 @@
 
     <!-- Phrase-templated strings -->
     <string name="msg_device_not_listed">{device_name} not listed here? Hold the {setup_button_identifier} until the {indicator_light} turns {indicator_light_setup_color_name}</string>
+    <string name="open_wifi_settings_text"><![CDATA[\n
+    \u2022 Tap the WIFI SETTINGS button to open your Android device\'s WiFi settings.\n\n
+    \u2022 Look for your {device_name} in the list and connect to it. It should look something like {wifi_prefix}_XXXXXX.\n\n
+    \u2022 You will be automatically taken back to this screen to continue the setup process.\n\n
+    ]]></string>
     <string name="get_ready_title_text">Time to set up your {device_name}!</string>
     <string name="get_ready_reconnect_title_text">Reconnect your {device_name} to Wi-Fi</string>
     <string name="get_ready_text"><![CDATA[\n
@@ -10,7 +15,7 @@
 \u2022 The indicator light should be blinking {indicator_light_setup_color_name}. If this {device_name} has been set up before, hold the {setup_button_identifier} until the {indicator_light} turns {indicator_light_setup_color_name}.\n\n
 \u2022 Make sure your Android device is connected to the internet.\n\n
 \u2022 Tap the READY button to proceed.]]></string>
-    <string name="wifi_list_header_text">Choose your {device_name}</string>
+    <string name="wifi_list_header_text">Connect to your {device_name}</string>
     <string name="connecting_text">Your {device_name} is connecting to</string>
     <string name="your_device_is_connected">Your {device_name} is connected!</string>
     <string name="msg_create_account_disclaimer"><![CDATA[By clicking "SIGN UP" you are indicating that you have read and agreed to the <a href="{tos_link}">Terms of Service</a> and <a href="{privacy_policy_link}">Privacy Policy.</a>]]></string>
@@ -46,6 +51,8 @@
     <string name="im_ready">Ready</string>
     <string name="connecting">Connecting</string>
     <string name="connecting_text_2">This can take about a minute.</string>
+    <string name="communicating">Communicating with device</string>
+    <string name="wifi_settings">WiFi Settings</string>
     <string name="cancel">Cancel</string>
     <string name="test_connection">Test connection</string>
     <string name="continue_str">Continue</string>

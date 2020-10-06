@@ -80,6 +80,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
 
     private static final int CHECK_SSID_INTERVAL = 2000; // interval for checking the currently connected SSID
     private Handler checkSSIDHandler;
+    private boolean checkSSIDRunning = false;
 
     @OnClick(R2.id.action_troubleshooting)
     protected void onTroubleshootingClick(View v) {
@@ -90,6 +91,11 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     @OnClick(R2.id.action_cancel)
     protected void onCancelClick() {
         finish();
+    }
+
+    @OnClick(R2.id.action_wifi)
+    protected void onWifiClick() {
+        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
     }
 
     @Override
@@ -112,10 +118,6 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
 
         checkSSIDHandler = new Handler();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // TODO show alternate UI
-        }
-
         Ui.setDrawable(this, R.id.imageView, DeviceSetupState.productInfo.getDeviceImageSmall());
 
         Ui.setText(this, R.id.wifi_list_header,
@@ -124,25 +126,41 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
                         .format()
         );
 
-        Ui.setText(this, R.id.msg_device_not_listed,
-                Phrase.from(this, R.string.msg_device_not_listed)
-                        .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
-                        .put("setup_button_identifier", getString(R.string.mode_button_name))
-                        .put("indicator_light", getString(R.string.indicator_light))
-                        .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
-                        .format()
-        );
-
-        Ui.setTextFromHtml(this, R.id.action_troubleshooting, R.string.troubleshooting);
-
-        if (!truthy(sparkCloud.getLoggedInUsername())) {
-            Ui.findView(this, R.id.logged_in_as).setVisibility(View.GONE);
-        } else {
-            Ui.setText(this, R.id.logged_in_as,
-                    Phrase.from(this, R.string.you_are_logged_in_as)
-                            .put("username", sparkCloud.getLoggedInUsername())
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+// TODO           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Ui.setText(this, R.id.open_wifi_settings,
+                    Phrase.from(this, R.string.open_wifi_settings_text)
+                            .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
+                            .put("wifi_prefix", getString(DeviceSetupState.productInfo.getNetworkNamePrefix()))
                             .format()
             );
+
+            findViewById(R.id.open_wifi_settings).setVisibility(View.VISIBLE);
+            findViewById(R.id.action_wifi).setVisibility(View.VISIBLE);
+            findViewById(R.id.wifi_list_fragment).setVisibility(View.GONE);
+            findViewById(R.id.msg_device_not_listed).setVisibility(View.GONE);
+            findViewById(R.id.logged_in_as).setVisibility(View.GONE);
+        } else {
+            Ui.setText(this, R.id.msg_device_not_listed,
+                    Phrase.from(this, R.string.msg_device_not_listed)
+                            .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
+                            .put("setup_button_identifier", getString(R.string.mode_button_name))
+                            .put("indicator_light", getString(R.string.indicator_light))
+                            .put("indicator_light_setup_color_name", getString(R.string.listen_mode_led_color_name))
+                            .format()
+            );
+
+            Ui.setTextFromHtml(this, R.id.action_troubleshooting, R.string.troubleshooting);
+
+            if (!truthy(sparkCloud.getLoggedInUsername())) {
+                Ui.findView(this, R.id.logged_in_as).setVisibility(View.GONE);
+            } else {
+                Ui.setText(this, R.id.logged_in_as,
+                        Phrase.from(this, R.string.you_are_logged_in_as)
+                                .put("username", sparkCloud.getLoggedInUsername())
+                                .format()
+                );
+            }
         }
     }
 
@@ -158,6 +176,8 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
                 onLocationDisabled();
             }
         }
+
+        startCheckSSIDTask();
     }
 
     @Override
@@ -165,13 +185,20 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         super.onResume();
         isResumed = true;
 
-        startCheckSSIDTask();
+        if (connectToApTask != null) {
+            showProgressDialog();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isResumed = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
         stopCheckSSIDTask();
     }
@@ -190,7 +217,10 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     };
 
     void startCheckSSIDTask() {
-        checkSSIDTask.run();
+        if (!checkSSIDRunning) {
+            checkSSIDTask.run();
+            checkSSIDRunning = true;
+        }
     }
 
     void stopCheckSSIDTask() {
@@ -225,6 +255,12 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
         if (currentSoftApSSID.toString().toLowerCase(Locale.ROOT).startsWith(softApPrefix)) {
             selectedSoftApSSID = currentSoftApSSID;
             startConnectWorker();
+
+            if (!isResumed) {
+                Intent intent = new Intent(getApplicationContext(), getClass());
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
         }
     }
 
