@@ -126,8 +126,7 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
                         .format()
         );
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-// TODO           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             Ui.setText(this, R.id.open_wifi_settings,
                     Phrase.from(this, R.string.open_wifi_settings_text)
                             .put("device_name", getString(DeviceSetupState.productInfo.getDeviceName()))
@@ -206,13 +205,11 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
     Runnable checkSSIDTask = new Runnable() {
         @Override
         public void run() {
-              try {
-                   checkSSID();
-              } finally {
-                   // 100% guarantee that this always happens, even if
-                   // your update method throws an exception
-                   checkSSIDHandler.postDelayed(checkSSIDTask, CHECK_SSID_INTERVAL);
-              }
+            try {
+                checkSSID();
+            } finally {
+                checkSSIDHandler.postDelayed(checkSSIDTask, CHECK_SSID_INTERVAL);
+            }
         }
     };
 
