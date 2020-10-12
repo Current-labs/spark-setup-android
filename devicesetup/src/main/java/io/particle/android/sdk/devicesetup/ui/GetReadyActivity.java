@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
@@ -219,7 +218,7 @@ public class GetReadyActivity extends BaseActivity implements PermissionsFragmen
     }
 
     private void moveToDeviceDiscovery() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !PermissionsFragment.hasPermission(this, permission.ACCESS_FINE_LOCATION)) {
+        if (!PermissionsFragment.hasPermission(this, permission.ACCESS_FINE_LOCATION)) {
             PermissionsFragment.get(this).ensurePermission(permission.ACCESS_FINE_LOCATION);
         } else {
             startActivity(new Intent(GetReadyActivity.this, DiscoverDeviceActivity.class));

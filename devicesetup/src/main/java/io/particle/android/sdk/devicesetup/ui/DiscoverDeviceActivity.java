@@ -172,9 +172,10 @@ public class DiscoverDeviceActivity extends RequiresWifiScansActivity
             if (!wifiFacade.isWifiEnabled()) {
                 onWifiDisabled();
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !canGetLocation()) {
-                onLocationDisabled();
-            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !canGetLocation()) {
+            onLocationDisabled();
         }
 
         startCheckSSIDTask();
