@@ -8,6 +8,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 
 import androidx.annotation.Nullable;
@@ -140,6 +141,17 @@ public class WifiFacade {
     public boolean enableNetwork(int networkId, boolean disableOthers) {
         log.d("enableNetwork for networkID " + networkId);
         return wifiManager.enableNetwork(networkId, disableOthers);
+    }
+
+    public void bindProcessToNetwork() {
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            Network network = getNetworkObjectForCurrentWifiConnection();
+            if (Build.VERSION.SDK_INT >= VERSION_CODES.M) {
+                connectivityManager.bindProcessToNetwork(network);
+            } else {
+                ConnectivityManager.setProcessDefaultNetwork(network);
+            }
+        }
     }
 
     public WifiConfiguration getWifiConfiguration(SSID ssid) {
